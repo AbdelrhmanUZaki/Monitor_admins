@@ -17,8 +17,8 @@ def create_db_tables():
     cur.execute('''CREATE TABLE IF NOT EXISTS combination (
                     combination_id INTEGER PRIMARY KEY AUTOINCREMENT,
                     bot_user_id INTEGER NOT NULL,                    
-                    admin_name TEXT NOT NULL,                  
                     admin_id INTEGER NOT NULL,
+                    admin_name TEXT NOT NULL,                  
                     source_group_id INTEGER NOT NULL,
                     source_group_name TEXT NOT NULL,
                     destination_group_id INTEGER,
