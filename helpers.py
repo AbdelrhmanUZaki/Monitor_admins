@@ -17,9 +17,11 @@ def add_new_user(user_id, name, user_username, user_joined_date):
                     (user_id, name, user_username, user_joined_date, current_step))
         conn.commit()
 
-
 @app.on_message(new_chat_members)
 async def on_join(client, message: Message):
+    """
+    To know when bot is added into a new group
+    """
     cur.execute("SELECT current_step FROM bot_users WHERE tele_id = ?", (message.from_user.id,))
     current_step = cur.fetchone()[0]
     if current_step == 1:
@@ -44,6 +46,9 @@ async def add_destinatin_group(message):
     destination_group_name = message.chat.title
     user_id = message.from_user.id
     source_group_id, source_group_name = await get_source_group_info(user_id)
+    await get_group_admins(message, destination_group_id, destination_group_name, source_group_id, source_group_name)
+
+async def get_group_admins(message, destination_group_id, destination_group_name, source_group_id, source_group_name):
     async for admin in app.get_chat_members(source_group_id,
                                             filter=enums.ChatMembersFilter.ADMINISTRATORS):
         admin: ChatMember
@@ -63,7 +68,6 @@ async def get_topic_id(chat_id, admin_name):
     topic_created = await app.create_forum_topic(chat_id, f"{admin_name}")
     return topic_created.id
 
-
 async def get_source_group_info(user_id):
     cur.execute("SELECT source_group_id, source_group_name from tmp WHERE tele_id = ?", (user_id, ))
     all_data = cur.fetchall()[0]
@@ -78,7 +82,7 @@ async def get_source_chat_id(source_message: Message):
     bot_user_id = source_message.from_user.id
     source_group_id = source_message.chat.id
     source_group_name = source_message.chat.title
-    msg = f"Source group that will be monitoring {source_message.chat.title}"
+    msg = f"Great!\n\nSource group that will be monitoring {source_message.chat.title}"
     cur.execute("INSERT INTO tmp values(?,?,?)", (bot_user_id,
                                                   source_group_id,
                                                   source_group_name))
