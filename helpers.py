@@ -6,7 +6,7 @@ from database.set_data import insert_in_combination_table
 from database.schema import conn, cur
 
 
-def add_user_if_not_exists(user_id, name, user_username, user_joined_date):
+def add_new_user(user_id, name, user_username, user_joined_date):
     # Check if the user already exists in the database
     cur.execute("SELECT * FROM bot_users WHERE tele_id = ?", (user_id,))
     existing_user = cur.fetchone()
