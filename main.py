@@ -3,8 +3,7 @@ from pyrogram.types import Message
 from pyrogram import filters
 from helpers import on_join, add_new_user
 from database_scripts.schema import create_db_tables
-from monitor_messages import fetch_all_combinations
-
+from database_scripts.get_data import fetch_all_combinations
 
 @app.on_message(filters.command(["start"]))
 async def handle_message(client, message: Message):
@@ -27,7 +26,6 @@ async def get_combinations(client, message: Message):
     msg = fetch_all_combinations(message.from_user.id, message.from_user.full_name)
     await message.reply(msg, reply_to_message_id=message.id)
 
-    
 
 if __name__ == "__main__":
     create_db_tables()

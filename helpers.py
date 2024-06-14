@@ -1,10 +1,12 @@
 from pyrogram.types import ChatMember, Message, ForumTopicCreated
 from pyrogram import enums
-from pyrogram.filters import new_chat_members
+from pyrogram import filters
 from config import app, get_bot_id
 from database_scripts.set_data import insert_in_combination_table
 from database_scripts.schema import conn, cur
+from database_scripts.get_data import fetch_all_db_admin_ids
 
+admins_mapping = {}
 
 def add_new_user(user_id, name, user_username, user_joined_date):
     # Check if the user already exists in the database
@@ -17,7 +19,7 @@ def add_new_user(user_id, name, user_username, user_joined_date):
                     (user_id, name, user_username, user_joined_date, current_step))
         conn.commit()
 
-@app.on_message(new_chat_members)
+@app.on_message(filters.new_chat_members)
 async def on_join(client, message: Message):
     """
     To know when bot is added into a new group
@@ -49,6 +51,7 @@ async def add_destinatin_group(message):
     await get_group_admins(message, destination_group_id, destination_group_name, source_group_id, source_group_name)
 
 async def get_group_admins(message, destination_group_id, destination_group_name, source_group_id, source_group_name):
+    global admins_mapping 
     async for admin in app.get_chat_members(source_group_id,
                                             filter=enums.ChatMembersFilter.ADMINISTRATORS):
         admin: ChatMember
@@ -64,6 +67,16 @@ async def get_group_admins(message, destination_group_id, destination_group_name
             insert_in_combination_table(values)
     conn.commit()
     await inform_about_new_combination(message, source_group_name, destination_group_name)
+    admins_mapping = fetch_all_db_admin_ids()
+
+@app.on_message(filters.group)
+async def forward_admin_messages(client, message: Message):
+    global admins_mapping
+    if message.from_user.id in admins_mapping and message.chat.id in admins_mapping[message.from_user.id]:
+        destination_info = admins_mapping[message.from_user.id][message.chat.id]
+        destination_group_id = destination_info[0]
+        destination_thread_id = destination_info[1]
+        await message.forward(destination_group_id, destination_thread_id)
 
 async def inform_about_new_combination(message, source_group_name, destination_group_name):
     """
