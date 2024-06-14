@@ -23,11 +23,11 @@ async def on_join(client, message: Message):
     cur.execute("SELECT current_step FROM bot_users WHERE tele_id = ?", (message.from_user.id,))
     current_step = cur.fetchone()[0]
     if current_step == 1:
-        await step_1(message)
+        await add_source_group(message)
     elif current_step == 2:
-        await step_2(message)
+        await add_destinatin_group(message)
 
-async def step_1(message):
+async def add_source_group(message):
     """
     The bot has been added to the first group (Source group)
     """
@@ -36,7 +36,7 @@ async def step_1(message):
         await get_source_chat_id(message)
         # with source_chat_id I could get the source group admins
     
-async def step_2(message):
+async def add_destinatin_group(message):
     """
     The bot has been added to the second group (Destination group)
     """
@@ -58,8 +58,6 @@ async def step_2(message):
                       topic_id, message.date)
             insert_in_combination_table(values)
     conn.commit()
-    # await set_current_admins_chat_id_null(user_id)
-
 
 async def get_topic_id(chat_id, admin_name):
     topic_created = await app.create_forum_topic(chat_id, f"{admin_name}")
