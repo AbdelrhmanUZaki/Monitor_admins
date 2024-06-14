@@ -1,9 +1,5 @@
 from database_scripts.schema import cur 
 
-def get_users_info():
-    cur.execute("SELECT * FROM combination")
-    for item in cur.fetchall():
-        print(item)
 
 def get_source_info():
     cur.execute('''
