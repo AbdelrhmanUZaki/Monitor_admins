@@ -1,4 +1,4 @@
-from database.schema import cur 
+from database_scripts.schema import cur 
 
 def insert_in_combination_table(values):
     cur.execute('''INSERT INTO combination

@@ -2,8 +2,8 @@ from pyrogram.types import ChatMember, Message, ForumTopicCreated
 from pyrogram import enums
 from pyrogram.filters import new_chat_members
 from config import app, get_bot_id
-from database.set_data import insert_in_combination_table
-from database.schema import conn, cur
+from database_scripts.set_data import insert_in_combination_table
+from database_scripts.schema import conn, cur
 
 
 def add_new_user(user_id, name, user_username, user_joined_date):

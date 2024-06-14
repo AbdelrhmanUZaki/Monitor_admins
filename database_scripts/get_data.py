@@ -1,4 +1,4 @@
-from database.schema import cur 
+from database_scripts.schema import cur 
 
 def get_users_info():
     cur.execute("SELECT * FROM combination")
