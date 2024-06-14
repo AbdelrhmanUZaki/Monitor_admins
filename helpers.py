@@ -63,9 +63,9 @@ async def get_group_admins(message, destination_group_id, destination_group_name
                       topic_id, message.date)
             insert_in_combination_table(values)
     conn.commit()
-    await info_about_new_combination(message, source_group_name, destination_group_name)
+    await inform_about_new_combination(message, source_group_name, destination_group_name)
 
-async def info_about_new_combination(message, source_group_name, destination_group_name):
+async def inform_about_new_combination(message, source_group_name, destination_group_name):
     msg = "You have successfully added a new record!"
     msg += f"\n\nBot will forward admins messages' from {source_group_name} to {destination_group_name}" 
     await app.send_message(message.from_user.id, msg)
