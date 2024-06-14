@@ -19,10 +19,12 @@ async def handle_message(client, message: Message):
     msg += "\n\nNote: You shouldn't be hidden in that group at least when using this bot"
     await message.reply(msg, reply_to_message_id=message.id)
 
-@app.on_message(filters.command(['combinations']))
+@app.on_message(filters.command(['list', 'عرض']))
 async def get_combinations(client, message: Message):
-    combinations = fetch_all_combinations()
-    msg = f"{combinations}"
+    """
+    Fetach all combinations for that admin
+    """
+    msg = fetch_all_combinations(message.from_user.id, message.from_user.full_name)
     await message.reply(msg, reply_to_message_id=message.id)
 
     
