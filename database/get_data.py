@@ -1,13 +1,10 @@
-from sqlite3 import connect
+from schema import cur
 
-conn = connect('database.db')
-cur = conn.cursor()
 
 def get_users_info():
     cur.execute("SELECT * FROM combination")
     for item in cur.fetchall():
         print(item)
-
 
 def get_source_info():
     cur.execute('''

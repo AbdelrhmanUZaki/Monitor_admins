@@ -2,7 +2,8 @@ from pyrogram.types import ChatMember, Message, ForumTopicCreated
 from pyrogram import enums
 from pyrogram.filters import new_chat_members
 from config import app, get_bot_id
-from database import conn, cur, insert_in_combination_table
+from database.set_data import insert_in_combination_table
+from database.schema import conn, cur
 
 
 def add_user_if_not_exists(user_id, name, user_username, user_joined_date):
@@ -11,7 +12,6 @@ def add_user_if_not_exists(user_id, name, user_username, user_joined_date):
     existing_user = cur.fetchone()
 
     if not existing_user:
-        # New user
         current_step = 1  # will add first group now (the source group) 
         cur.execute("INSERT INTO bot_users (tele_id, name, username, date, current_step) VALUES (?, ?, ?, ?, ?)",
                     (user_id, name, user_username, user_joined_date, current_step))
@@ -71,7 +71,6 @@ async def get_source_group_info(user_id):
     source_group_name = all_data[1]
     return source_group_id, source_group_name
 
-
 async def get_source_chat_id(source_message: Message):
     """
     This to get the message that contain admins
@@ -86,7 +85,6 @@ async def get_source_chat_id(source_message: Message):
     conn.commit()
     await app.send_message(source_message.from_user.id, msg)
     await update_current_step(source_message.from_user.id)
-
 
 async def update_current_step(user_id):
     msg = f'Now add the destination group\n\n'

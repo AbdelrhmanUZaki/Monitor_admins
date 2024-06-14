@@ -2,7 +2,7 @@ from config import app
 from pyrogram.types import Message 
 from pyrogram import filters
 from helpers import on_join, add_user_if_not_exists
-from database import create_db_tables
+from database.schema import create_db_tables
 
 
 @app.on_message(filters.command(["start"]))

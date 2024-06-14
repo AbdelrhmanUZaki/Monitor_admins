@@ -1,8 +1,4 @@
-from sqlite3 import connect
-
-conn = connect('database.db')
-cur = conn.cursor()
-
+from schema import cur
 
 def insert_in_combination_table(values):
     cur.execute('''INSERT INTO combination
