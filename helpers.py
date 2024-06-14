@@ -2,7 +2,7 @@ from pyrogram.types import ChatMember, Message, ForumTopicCreated
 from pyrogram import enums
 from pyrogram.filters import new_chat_members
 from config import app, get_bot_id
-from db import conn, cur, insert_in_combination_table
+from database import conn, cur, insert_in_combination_table
 
 
 def add_user_if_not_exists(user_id, name, user_username, user_joined_date):
