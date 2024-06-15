@@ -13,9 +13,9 @@ async def handle_message(client, message: Message):
     user_joined_date = message.date
     add_new_user(user_id, name, user_username, user_joined_date)
 
-    msg = f"Hello {message.from_user.full_name}"
-    msg += "\nFirst add this bot as admin in the first group (Source Group)"
-    msg += "\n\nNote: You shouldn't be hidden in that group at least when using this bot"
+    msg = f"مرحبا {message.from_user.full_name}\n\n"
+    msg += "لبدء استخدام البوت قمت بإضافته للمجموعة الأولى (التي تريد متابعتها)\n"
+    msg += "لاحظ أن: يجب أن لا تكون أنت كمشرف مخفيا.\nأي لا تقم بتفعيل هذا الخيار Remain anonymous في صلاحياتك كمشرف -على الأقل حتى تربط المجموعتين-."
     await message.reply(msg, reply_to_message_id=message.id)
 
 @app.on_message(filters.command(['list', 'عرض']))
@@ -25,6 +25,14 @@ async def get_combinations(client, message: Message):
     """
     msg = fetch_all_combinations(message.from_user.id, message.from_user.full_name)
     await message.reply(msg, reply_to_message_id=message.id)
+
+#@app.on_message(filters.command(['help', 'مساعدة']))
+#async def get_combinations(client, message: Message):
+#    """
+#    Show help message
+#    """
+#    msg = ''
+#    await message.reply(msg, reply_to_message_id=message.id)
 
 
 if __name__ == "__main__":

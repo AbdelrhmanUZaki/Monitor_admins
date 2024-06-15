@@ -1,6 +1,7 @@
 from pyrogram.types import ChatMember, Message, ForumTopicCreated
 from pyrogram import enums
 from pyrogram import filters
+from pyrogram.types.messages_and_media import message
 from config import app, get_bot_id
 from database_scripts.set_data import insert_in_combination_table
 from database_scripts.schema import conn, cur
@@ -49,6 +50,20 @@ async def add_destinatin_group(message):
     user_id = message.from_user.id
     source_group_id, source_group_name = await get_source_group_info(user_id)
     await get_group_admins(message, destination_group_id, destination_group_name, source_group_id, source_group_name)
+    reset_current_step(message.from_user.id)
+    reset_tmp_table(message.from_user.id)
+
+def reset_current_step(tele_id):
+    """
+    Reset current_step to let user add another combinations as he need. 
+    """
+    current_step = 1  # 
+    cur.execute("UPDATE bot_users SET current_step = ? WHERE tele_id = ?", (current_step, tele_id))
+    conn.commit()
+
+def reset_tmp_table(tele_id):
+    cur.execute("DELETE FROM tmp WHERE tele_id = ?", (tele_id,))
+    conn.commit()
 
 async def get_group_admins(message, destination_group_id, destination_group_name, source_group_id, source_group_name):
     global admins_mapping 
@@ -82,8 +97,9 @@ async def inform_about_new_combination(message, source_group_name, destination_g
     """
     Inform user about his new (source -> group combination)
     """
-    msg = "You have successfully added a new record!"
-    msg += f"\n\nBot will forward admins messages' from {source_group_name} to {destination_group_name}" 
+    msg = "مبارك!\n\nلقد قمت بربط مجموعتين جديدتين بنجاح.\n"
+    msg += f"سيقوم البوت بتحويل الرسائل من '{source_group_name}' إلى '{destination_group_name}'.\n\nاضغط /list لعرض جميع المجموعات المتاحة" 
+    msg += "\n\nلاستخدام البوت مرة أخرى يمكنك تكرار نفس الخطوات دباية من إضافة المجموعة الأولى ثم الثانية... إلخ)"
     await app.send_message(message.from_user.id, msg)
 
 async def get_topic_id(chat_id, admin_name):
@@ -104,7 +120,7 @@ async def get_source_chat_id(source_message: Message):
     bot_user_id = source_message.from_user.id
     source_group_id = source_message.chat.id
     source_group_name = source_message.chat.title
-    msg = f"Great!\n\nSource group that will be monitoring {source_message.chat.title}"
+    msg = f"أحسنت!\nسيتابع البوت مجموعة '{source_message.chat.title}' على مدار الساعة."
     cur.execute("INSERT INTO tmp values(?,?,?)", (bot_user_id,
                                                   source_group_id,
                                                   source_group_name))
@@ -113,8 +129,8 @@ async def get_source_chat_id(source_message: Message):
     await update_current_step(source_message.from_user.id)
 
 async def update_current_step(user_id):
-    msg = f'Now add the destination group\n\n'
-    msg += f'Note: Destination group must be in "Topics" view, enable it from group settings first\n\n'
+    msg = f"الآن أضف المجموعة التي تريد تحويل الرسائل إليها\n\n"
+    msg += f"لاحظ أن: المجموعة المستهدفة يجب أن تكون في وضع التبويبات 'Topics'، لذا قم بتفعيلها من الإعدادات أولا"
     await app.send_message(user_id, msg)
     cur.execute("UPDATE bot_users SET current_step = 2 WHERE tele_id = ?", (user_id,))
     conn.commit()
