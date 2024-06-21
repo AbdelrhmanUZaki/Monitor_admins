@@ -99,7 +99,7 @@ async def inform_about_new_combination(message, source_group_name, destination_g
     """
     msg = "مبارك!\n\nلقد قمت بربط مجموعتين جديدتين بنجاح.\n"
     msg += f"سيقوم البوت بتحويل الرسائل من '{source_group_name}' إلى '{destination_group_name}'.\n\nاضغط /list لعرض جميع المجموعات المتاحة" 
-    msg += "\n\nلاستخدام البوت مرة أخرى يمكنك تكرار نفس الخطوات دباية من إضافة المجموعة الأولى ثم الثانية... إلخ)"
+    msg += "\n\nلاستخدام البوت مرة أخرى يمكنك تكرار نفس الخطوات بداية من إضافة المجموعة الأولى ثم الثانية... إلخ)"
     await app.send_message(message.from_user.id, msg)
 
 async def get_topic_id(chat_id, admin_name):
