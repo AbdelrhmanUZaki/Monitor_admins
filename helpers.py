@@ -1,11 +1,10 @@
-from pyrogram.types import ChatMember, Message, ForumTopicCreated
+from config import app, get_bot_id
+from database_scripts.get_data import fetch_all_db_admin_ids
+from database_scripts.schema import conn, cur
+from database_scripts.set_data import insert_in_combination_table
 from pyrogram import enums
 from pyrogram import filters
-from pyrogram.types.messages_and_media import message
-from config import app, get_bot_id
-from database_scripts.set_data import insert_in_combination_table
-from database_scripts.schema import conn, cur
-from database_scripts.get_data import fetch_all_db_admin_ids
+from pyrogram.types import ChatMember, Message, ForumTopicCreated
 
 admins_mapping = {}
 

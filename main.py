@@ -1,9 +1,9 @@
 from config import app
-from pyrogram.types import Message 
-from pyrogram import filters
-from helpers import on_join, add_new_user
-from database_scripts.schema import create_db_tables
 from database_scripts.get_data import fetch_all_combinations
+from database_scripts.schema import create_db_tables
+from helpers import on_join, add_new_user
+from pyrogram import filters
+from pyrogram.types import Message 
 
 @app.on_message(filters.command(["start"]))
 async def handle_message(client, message: Message):
