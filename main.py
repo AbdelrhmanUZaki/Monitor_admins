@@ -3,7 +3,8 @@ from database_scripts.get_data import fetch_all_combinations
 from database_scripts.schema import create_db_tables
 from helpers import on_join, add_new_user
 from pyrogram import filters
-from pyrogram.types import Message 
+from pyrogram.types import Message
+
 
 @app.on_message(filters.command(["start"]))
 async def handle_message(client, message: Message):
@@ -18,7 +19,8 @@ async def handle_message(client, message: Message):
     msg += "لاحظ أن: يجب أن لا تكون أنت كمشرف مخفيا.\nأي لا تقم بتفعيل هذا الخيار Remain anonymous في صلاحياتك كمشرف -على الأقل حتى تربط المجموعتين-."
     await message.reply(msg, reply_to_message_id=message.id)
 
-@app.on_message(filters.command(['list', 'عرض']))
+
+@app.on_message(filters.command(["list", "عرض"]))
 async def get_combinations(client, message: Message):
     """
     Fetach all combinations for that admin
@@ -26,8 +28,9 @@ async def get_combinations(client, message: Message):
     msg = fetch_all_combinations(message.from_user.id, message.from_user.full_name)
     await message.reply(msg, reply_to_message_id=message.id)
 
-#@app.on_message(filters.command(['help', 'مساعدة']))
-#async def get_combinations(client, message: Message):
+
+# @app.on_message(filters.command(['help', 'مساعدة']))
+# async def get_combinations(client, message: Message):
 #    """
 #    Show help message
 #    """
